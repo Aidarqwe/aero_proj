@@ -3,7 +3,7 @@ import ApiError from "../exceptions/api-error";
 import tokenService from "../service/token-service";
 import {TokenPayload} from "../types/auth/token";
 
-interface IAuthRequest extends Request {
+export interface IAuthRequest extends Request {
 	user?: TokenPayload;
 }
 

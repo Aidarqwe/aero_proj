@@ -12,9 +12,9 @@ Token.init(
     {
         id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
         userId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
-            references: { model: User, key: "u_id" },
+            references: { model: User, key: "id" },
             onDelete: "CASCADE",
         },
         refreshToken: {

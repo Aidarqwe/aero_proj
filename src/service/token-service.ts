@@ -6,7 +6,7 @@ import {TokenPayload} from "../types/auth/token";
 
 class TokenService {
 	generateTokens(payload: TokenPayload) {
-		const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET!, { expiresIn: "30m" });
+		const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET!, { expiresIn: "10m" });
 		const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET!, { expiresIn: "30d" });
 		return {
 			accessToken,
@@ -30,26 +30,16 @@ class TokenService {
 			return null;
 		}
 	}
-	async saveToken(userId: number, refreshToken: string): Promise<void> {
-		try {
-			const [token, created] = await Token.findOrCreate({
-				where: { userId },
-				defaults: { refreshToken }
-			});
 
-			if (!created) {
-				await token.update({ refreshToken });
-				console.log("Token updated successfully");
-			} else {
-				console.log("New token saved successfully");
-			}
+	async saveToken(userId: string, refreshToken: string): Promise<void> {
+		try {
+			await Token.create({ userId, refreshToken });
+			console.log("New token saved successfully");
 		} catch (error: unknown) {
-			console.error("Неизвестная ошибка при сохранении токена", error);
+			console.error("Ошибка при сохранении токена", error);
 			throw new ApiError(500, "Неизвестная ошибка при сохранении токена", []);
 		}
 	}
-
-
 	async removeToken(refreshToken: string): Promise<void> {
 		try {
 			const result = await Token.destroy({ where: { refreshToken } });
